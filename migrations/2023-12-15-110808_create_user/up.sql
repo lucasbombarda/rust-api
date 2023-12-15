@@ -1,0 +1,10 @@
+-- Your SQL goes here
+CREATE TABLE users (
+  id SERIAL PRIMARY KEY,
+  active BOOLEAN NOT NULL DEFAULT TRUE,
+  username VARCHAR(30) NOT NULL UNIQUE,
+  email VARCHAR(254) NOT NULL UNIQUE,
+  password VARCHAR(60) NOT NULL,
+  created_at TIMESTAMP NOT NULL DEFAULT now(),
+  updated_at TIMESTAMP NOT NULL DEFAULT now()
+);
