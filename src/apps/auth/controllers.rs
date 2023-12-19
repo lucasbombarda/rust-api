@@ -6,8 +6,6 @@ use axum::{http::StatusCode, Extension, Json};
 pub async fn list_users(
     Extension(pool): Extension<DbPool>,
 ) -> Result<Json<Vec<Users>>, StatusCode> {
-    println!("List users called");
-
     let mut conn = match pool.get() {
         Ok(conn) => conn,
         Err(_) => return Err(StatusCode::INTERNAL_SERVER_ERROR),
@@ -15,6 +13,6 @@ pub async fn list_users(
 
     match list_all_users(&mut conn) {
         Ok(users) => Ok(Json(users)),
-        Err(_) => Err(StatusCode::INTERNAL_SERVER_ERROR),
+        Err(_) => return Err(StatusCode::INTERNAL_SERVER_ERROR),
     }
 }
