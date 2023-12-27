@@ -30,7 +30,7 @@ pub async fn detail_user(
 
     return match detail_one_user(&mut conn, user_id) {
         Ok(Some(user)) => Ok(Json(user)),
-        Ok(None) => return Err(StatusCode::NOT_FOUND),
-        Err(_) => return Err(StatusCode::INTERNAL_SERVER_ERROR),
+        Ok(None) => Err(StatusCode::NOT_FOUND),
+        Err(_) => Err(StatusCode::INTERNAL_SERVER_ERROR),
     };
 }
