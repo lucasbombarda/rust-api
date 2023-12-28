@@ -8,7 +8,7 @@ diesel::table! {
         username -> Varchar,
         #[max_length = 254]
         email -> Varchar,
-        #[max_length = 60]
+        #[max_length = 254]
         password -> Varchar,
         created_at -> Timestamp,
         updated_at -> Timestamp,
