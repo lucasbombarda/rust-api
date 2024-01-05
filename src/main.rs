@@ -9,6 +9,7 @@ mod apps;
 mod common;
 mod config;
 mod schema;
+mod utils;
 
 fn setup_tracing() {
     let level = if settings::DEBUG {
