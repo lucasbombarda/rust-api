@@ -5,7 +5,7 @@ This project is an implementation of a REST API in Rust, utilizing Axum for the 
 ## Getting Started
 
 ### Prerequisites
-Ensure you have Rust installed on your system. Visit [Rust's official site](https://www.rust-lang.org/) for installation instructions.
+Ensure you have Rust and PostgreSQL installed on your system. Visit [Rust's site](https://www.rust-lang.org/learn/get-started) and [PostgreSQL's site](https://www.postgresql.org/download/) for installation instructions.
 
 ### Setup
 
