@@ -1,6 +1,6 @@
 # REST API in Rust
 ## Overview
-This project is an implementation of a REST API in Rust, utilizing Axum for the web framework and Diesel for ORM and database interactions. It's designed as an educational endeavor to explore Rust's capabilities in web development.
+This project is an ongoing development of a REST API implementation in Rust, utilizing Axum for the web framework and Diesel for ORM and database interactions. It's designed as an educational endeavor to explore Rust's capabilities in web development.
 
 ## Getting Started
 
