@@ -13,10 +13,10 @@ pub async fn list_users(
         Err(_) => return Err(StatusCode::INTERNAL_SERVER_ERROR),
     };
 
-    return match list_all_users(&mut conn) {
+    match list_all_users(&mut conn) {
         Ok(users) => Ok(Json(users)),
         Err(_) => Err(StatusCode::INTERNAL_SERVER_ERROR),
-    };
+    }
 }
 
 pub async fn detail_user(
@@ -28,9 +28,9 @@ pub async fn detail_user(
         Err(_) => return Err(StatusCode::INTERNAL_SERVER_ERROR),
     };
 
-    return match detail_one_user(&mut conn, user_id) {
+    match detail_one_user(&mut conn, user_id) {
         Ok(Some(user)) => Ok(Json(user)),
         Ok(None) => Err(StatusCode::NOT_FOUND),
         Err(_) => Err(StatusCode::INTERNAL_SERVER_ERROR),
-    };
+    }
 }

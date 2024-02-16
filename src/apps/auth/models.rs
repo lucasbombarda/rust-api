@@ -17,13 +17,13 @@ pub struct Users {
 }
 
 pub fn list_all_users(conn: &mut PgConnection) -> QueryResult<Vec<Users>> {
-    return users.load::<Users>(conn);
+    users.load::<Users>(conn)
 }
 
 pub fn detail_one_user(conn: &mut PgConnection, user_id: i32) -> QueryResult<Option<Users>> {
-    return users
+    users
         .find(user_id)
         .select(Users::as_select())
         .first(conn)
-        .optional();
+        .optional()
 }

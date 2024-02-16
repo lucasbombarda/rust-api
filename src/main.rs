@@ -3,7 +3,6 @@ use axum::{Extension, Router};
 use config::settings;
 use tower_http::trace::TraceLayer;
 use tracing::Level;
-use tracing_subscriber;
 
 mod apps;
 mod common;
@@ -34,12 +33,7 @@ async fn main() {
         .await
         .expect("ERROR: Can not start listener.");
 
-    println!(
-        "INFO: Listening on http://{}",
-        listener
-            .local_addr()
-            .expect("ERROR: Provide IP and PORT on settings.rs")
-    );
+    println!("INFO: Listening on http://{}", settings::HOST);
 
     axum::serve(listener, app)
         .await
