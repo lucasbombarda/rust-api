@@ -1,5 +1,5 @@
-use super::models::{list_all_users, insert_user, detail_one_user};
-use super::models::{Users, UserInsert};
+use super::models::{detail_one_user, insert_user, list_all_users};
+use super::models::{UserInsert, Users};
 use crate::common::db::DbPool;
 use axum::extract::Path;
 use axum::{http::StatusCode, Extension, Json};
@@ -35,8 +35,8 @@ pub async fn detail_user(
 }
 
 pub async fn create_user(
-    Json(user): Json<UserInsert>,
     Extension(pool): Extension<DbPool>,
+    Json(user): Json<UserInsert>,
 ) -> Result<Json<Users>, StatusCode> {
     let mut conn = match pool.get() {
         Ok(conn) => conn,

@@ -1,7 +1,7 @@
 use crate::schema::users::dsl::*;
 use chrono::NaiveDateTime;
 use diesel::prelude::*;
-use serde::Serialize;
+use serde::{Deserialize, Serialize};
 
 #[derive(Queryable, Selectable, Serialize)]
 #[diesel(table_name = crate::schema::users )]
@@ -16,6 +16,9 @@ pub struct Users {
     pub updated_at: NaiveDateTime,
 }
 
+#[derive(Insertable, Serialize, Clone, Debug, Deserialize)]
+#[diesel(table_name = crate::schema::users )]
+#[diesel(check_for_backend(diesel::pg::Pg))]
 pub struct UserInsert {
     pub username: String,
     pub email: String,
@@ -35,7 +38,5 @@ pub fn detail_one_user(conn: &mut PgConnection, user_id: i32) -> QueryResult<Opt
 }
 
 pub fn insert_user(conn: &mut PgConnection, user: UserInsert) -> QueryResult<Users> {
-    diesel::insert_into(users)
-        .values(&user)
-        .get_result(conn)
+    diesel::insert_into(users).values(&user).get_result(conn)
 }
