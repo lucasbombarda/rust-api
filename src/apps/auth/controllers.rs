@@ -1,6 +1,5 @@
-use super::models::detail_one_user;
-use super::models::list_all_users;
-use super::models::Users;
+use super::models::{detail_one_user, insert_user, list_all_users};
+use super::models::{UserInsert, Users};
 use crate::common::db::DbPool;
 use axum::extract::Path;
 use axum::{http::StatusCode, Extension, Json};
@@ -31,6 +30,21 @@ pub async fn detail_user(
     match detail_one_user(&mut conn, user_id) {
         Ok(Some(user)) => Ok(Json(user)),
         Ok(None) => Err(StatusCode::NOT_FOUND),
+        Err(_) => Err(StatusCode::INTERNAL_SERVER_ERROR),
+    }
+}
+
+pub async fn create_user(
+    Extension(pool): Extension<DbPool>,
+    Json(user): Json<UserInsert>,
+) -> Result<Json<Users>, StatusCode> {
+    let mut conn = match pool.get() {
+        Ok(conn) => conn,
+        Err(_) => return Err(StatusCode::INTERNAL_SERVER_ERROR),
+    };
+
+    match insert_user(&mut conn, user) {
+        Ok(user) => Ok(Json(user)),
         Err(_) => Err(StatusCode::INTERNAL_SERVER_ERROR),
     }
 }
