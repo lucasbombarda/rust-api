@@ -16,7 +16,7 @@ pub struct Users {
     pub updated_at: NaiveDateTime,
 }
 
-#[derive(Insertable, Serialize, Clone, Debug, Deserialize)]
+#[derive(Insertable, Serialize, Deserialize)]
 #[diesel(table_name = crate::schema::users )]
 #[diesel(check_for_backend(diesel::pg::Pg))]
 pub struct UserInsert {
