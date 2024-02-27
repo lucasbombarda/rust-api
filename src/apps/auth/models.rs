@@ -2,6 +2,7 @@ use crate::schema::users::dsl::*;
 use chrono::NaiveDateTime;
 use diesel::prelude::*;
 use serde::{Deserialize, Serialize};
+use crate::utils::password_hash;
 
 #[derive(Queryable, Selectable, Serialize)]
 #[diesel(table_name = crate::schema::users )]
@@ -17,7 +18,7 @@ pub struct Users {
 }
 
 #[derive(Insertable, Serialize, Deserialize)]
-#[diesel(table_name = crate::schema::users )]
+#[diesel(table_name = crate::schema::users)]
 #[diesel(check_for_backend(diesel::pg::Pg))]
 pub struct UserInsert {
     pub username: String,
@@ -38,5 +39,12 @@ pub fn detail_one_user(conn: &mut PgConnection, user_id: i32) -> QueryResult<Opt
 }
 
 pub fn insert_user(conn: &mut PgConnection, user: UserInsert) -> QueryResult<Users> {
+    let hashed_password = password_hash::create_hash(user.password.as_bytes()).unwrap();
+
+    let user = UserInsert {
+        password: hashed_password,
+        ..user
+    };
+
     diesel::insert_into(users).values(&user).get_result(conn)
 }
