@@ -1,50 +1,79 @@
+use super::models::UserInsert;
 use super::models::{detail_one_user, insert_user, list_all_users};
-use super::models::{UserInsert, Users};
 use crate::common::db::DbPool;
 use axum::extract::Path;
+use axum::response::IntoResponse;
 use axum::{http::StatusCode, Extension, Json};
+use serde_json::json;
 
-pub async fn list_users(
-    Extension(pool): Extension<DbPool>,
-) -> Result<Json<Vec<Users>>, StatusCode> {
+pub async fn list_users(Extension(pool): Extension<DbPool>) -> impl IntoResponse {
     let mut conn = match pool.get() {
         Ok(conn) => conn,
-        Err(_) => return Err(StatusCode::INTERNAL_SERVER_ERROR),
+        Err(_) => {
+            return (
+                StatusCode::INTERNAL_SERVER_ERROR,
+                Json(json!({"detail": "Database connection error."})),
+            )
+        }
     };
 
     match list_all_users(&mut conn) {
-        Ok(users) => Ok(Json(users)),
-        Err(_) => Err(StatusCode::INTERNAL_SERVER_ERROR),
+        Ok(users) => (StatusCode::OK, Json(json!(users))),
+        Err(_) => (
+            StatusCode::INTERNAL_SERVER_ERROR,
+            Json(json!({"detail": "Database error."})),
+        ),
     }
 }
 
 pub async fn detail_user(
     Path(user_id): Path<i32>,
     Extension(pool): Extension<DbPool>,
-) -> Result<Json<Users>, StatusCode> {
+) -> impl IntoResponse {
     let mut conn = match pool.get() {
         Ok(conn) => conn,
-        Err(_) => return Err(StatusCode::INTERNAL_SERVER_ERROR),
+        Err(_) => {
+            return (
+                StatusCode::INTERNAL_SERVER_ERROR,
+                Json(json!({"detail": "Database connection error."})),
+            )
+        }
     };
 
     match detail_one_user(&mut conn, user_id) {
-        Ok(Some(user)) => Ok(Json(user)),
-        Ok(None) => Err(StatusCode::NOT_FOUND),
-        Err(_) => Err(StatusCode::INTERNAL_SERVER_ERROR),
+        Ok(Some(user)) => (StatusCode::OK, Json(json!(user))),
+        Ok(None) => (
+            StatusCode::NOT_FOUND,
+            Json(json!({"detail": "User not found."})),
+        ),
+        Err(_) => (
+            StatusCode::INTERNAL_SERVER_ERROR,
+            Json(json!({"detail": "Database error."})),
+        ),
     }
 }
 
 pub async fn create_user(
     Extension(pool): Extension<DbPool>,
     Json(user): Json<UserInsert>,
-) -> Result<Json<Users>, StatusCode> {
+) -> impl IntoResponse {
     let mut conn = match pool.get() {
         Ok(conn) => conn,
-        Err(_) => return Err(StatusCode::INTERNAL_SERVER_ERROR),
+        Err(_) => {
+            return {
+                (
+                    StatusCode::INTERNAL_SERVER_ERROR,
+                    Json(json!({"detail": "Database connection error."})),
+                )
+            }
+        }
     };
 
     match insert_user(&mut conn, user) {
-        Ok(user) => Ok(Json(user)),
-        Err(_) => Err(StatusCode::INTERNAL_SERVER_ERROR),
+        Ok(user) => (StatusCode::CREATED, Json(json!(user))),
+        Err(_) => (
+            StatusCode::INTERNAL_SERVER_ERROR,
+            Json(json!({"detail": "Database error."})),
+        ),
     }
 }

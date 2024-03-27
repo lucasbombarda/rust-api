@@ -1,8 +1,8 @@
 use crate::schema::users::dsl::*;
+use crate::utils::password_hash;
 use chrono::NaiveDateTime;
 use diesel::prelude::*;
 use serde::{Deserialize, Serialize};
-use crate::utils::password_hash;
 
 #[derive(Queryable, Selectable, Serialize)]
 #[diesel(table_name = crate::schema::users )]
